@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type ShoppingCartProviderProps = {
   children: ReactNode;
@@ -14,6 +20,7 @@ type ShoppingCartContext = {
   increaseCartQuantity: (id: number) => void;
   decreaseCartQuantity: (id: number) => void;
   removeFromCart: (id: number) => void;
+  cartQuantity: number;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -24,6 +31,17 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const [cartQuantity, setCartQuantity] = useState<number>(0);
+
+  useEffect(() => {
+    setCartQuantity((prev) => {
+      let sum = 0;
+      cartItems.forEach((a) => {
+        sum += a?.quantity || 0;
+      });
+      return sum;
+    });
+  }, [cartItems]);
 
   function getItemQuantity(id: number) {
     return cartItems.find((item: cartItem) => item.id === id)?.quantity || 0;
@@ -72,6 +90,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
+        cartQuantity,
       }}
     >
       {children}
