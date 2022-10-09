@@ -8,18 +8,18 @@ type CartItemProps = {
   quantity: number;
 };
 
-type storeItemsType =
-  | undefined
-  | {
-      id: number;
-      name: string;
-      price: number;
-      imgUrl: string;
-    };
+type storeItemsType = {
+  id: number;
+  name: string;
+  price: number;
+  imgUrl: string;
+};
 
 export function CartItem({ id, quantity }: CartItemProps) {
   const { removeFromCart } = useShoppingCart();
-  const item: storeItemsType = storeItems.find((item) => item.id === id);
+  const item: undefined | storeItemsType = storeItems.find(
+    (item) => item.id === id
+  );
   if (item === undefined) return null;
   return (
     <Stack
