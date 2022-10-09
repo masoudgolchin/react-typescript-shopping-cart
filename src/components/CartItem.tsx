@@ -8,10 +8,19 @@ type CartItemProps = {
   quantity: number;
 };
 
+type storeItemsType =
+  | undefined
+  | {
+      id: number;
+      name: string;
+      price: number;
+      imgUrl: string;
+    };
+
 export function CartItem({ id, quantity }: CartItemProps) {
   const { removeFromCart } = useShoppingCart();
-  const item = storeItems.find((item) => item.id === id);
-  if (item === null) return null;
+  const item: storeItemsType = storeItems.find((item) => item.id === id);
+  if (item === undefined) return null;
   return (
     <Stack
       direction="horizontal"
@@ -19,12 +28,13 @@ export function CartItem({ id, quantity }: CartItemProps) {
       className="d - flex align-items-center"
     >
       <img
-        src={item?.imgUrl}
+        src={item.imgUrl}
+        alt={item.name}
         style={{ width: "125px", height: "75px", objectFit: "cover" }}
       />
       <div className="me-auto">
         <div>
-          {item?.name}{" "}
+          {item.name}{" "}
           {quantity > 1 && (
             <span className="text-muted" style={{ fontSize: ".65rem" }}>
               x{quantity}
@@ -32,12 +42,12 @@ export function CartItem({ id, quantity }: CartItemProps) {
           )}
         </div>
         <div className="text-muted" style={{ fontSize: ".75rem" }}>
-          {formatCurrency(item?.price === undefined ? 0 : +item?.price)}
+          {formatCurrency(item.price === undefined ? 0 : +item.price)}
         </div>
       </div>
       <div>
         {formatCurrency(
-          (item?.price === undefined ? 0 : +item?.price) * quantity
+          (item.price === undefined ? 0 : +item.price) * quantity
         )}
       </div>
       <Button
